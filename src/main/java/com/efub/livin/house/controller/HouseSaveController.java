@@ -1,6 +1,6 @@
-package com.efub.livin.maps.controller;
+package com.efub.livin.house.controller;
 
-import com.efub.livin.maps.service.HouseSaveService;
+import com.efub.livin.house.service.HouseSaveService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

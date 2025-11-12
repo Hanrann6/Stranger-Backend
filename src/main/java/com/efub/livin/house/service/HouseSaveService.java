@@ -1,16 +1,16 @@
-package com.efub.livin.maps.service;
+package com.efub.livin.house.service;
 
-import com.efub.livin.maps.domain.HouseType;
+import com.efub.livin.house.domain.HouseType;
 import lombok.RequiredArgsConstructor;
-import com.efub.livin.maps.domain.Document;
-import com.efub.livin.maps.domain.House;
-import com.efub.livin.maps.dto.KakaoResponseDto;
-import com.efub.livin.maps.repository.HouseSaveRepository;
+import com.efub.livin.house.domain.Document;
+import com.efub.livin.house.domain.House;
+import com.efub.livin.house.dto.KakaoResponseDto;
+import com.efub.livin.house.repository.HouseSaveRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-import static com.efub.livin.maps.domain.HouseType.BOARDING;
-import static com.efub.livin.maps.domain.HouseType.PRIVATE;
+import static com.efub.livin.house.domain.HouseType.BOARDING;
+import static com.efub.livin.house.domain.HouseType.PRIVATE;
 
 @Service
 @RequiredArgsConstructor

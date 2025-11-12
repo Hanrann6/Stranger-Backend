@@ -1,4 +1,4 @@
-package com.efub.livin.maps.domain;
+package com.efub.livin.house.domain;
 
 import lombok.Getter;
 

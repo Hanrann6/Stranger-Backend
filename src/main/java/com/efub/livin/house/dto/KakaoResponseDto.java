@@ -1,8 +1,8 @@
-package com.efub.livin.maps.dto;
+package com.efub.livin.house.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import com.efub.livin.maps.domain.Document;
+import com.efub.livin.house.domain.Document;
 
 import java.util.List;
 
