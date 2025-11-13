@@ -1,4 +1,4 @@
-package com.efub.livin.house.dto;
+package com.efub.livin.house.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

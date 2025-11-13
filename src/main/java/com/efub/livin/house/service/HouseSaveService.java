@@ -4,7 +4,7 @@ import com.efub.livin.house.domain.HouseType;
 import lombok.RequiredArgsConstructor;
 import com.efub.livin.house.domain.Document;
 import com.efub.livin.house.domain.House;
-import com.efub.livin.house.dto.KakaoResponseDto;
+import com.efub.livin.house.dto.response.KakaoResponseDto;
 import com.efub.livin.house.repository.HouseSaveRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -26,7 +26,6 @@ public class HouseSaveService {
         // 키워드별로 데이터 저장
         for(String keyword : KEYWORDS){
             KakaoResponseDto response = kakaoApiClient.searchByKeyword(keyword);
-            //KakaoResponseDto response = kakaoApiClient.searchByKeyword(keyword);
             List<Document> documents = response.getDocuments();
 
             if (documents == null || documents.isEmpty()) {
