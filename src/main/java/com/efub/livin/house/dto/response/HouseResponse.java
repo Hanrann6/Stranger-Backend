@@ -17,7 +17,8 @@ public class HouseResponse {
     private Boolean parking;
     private HouseType type;
     private String options;
-    private String imageUrl;
+    private String x; // 경도
+    private String y; // 위도
 
     public static HouseResponse from(House house){
         HouseResponse response = new HouseResponse();
@@ -27,7 +28,9 @@ public class HouseResponse {
         response.type = house.getType();
         response.parking = house.getParking();
         response.options = house.getOptions();
-        response.imageUrl = house.getImageUrl();
+        response.x = house.getLon(); // 경도
+        response.y = house.getLat(); // 위도
+
         return response;
     }
 }

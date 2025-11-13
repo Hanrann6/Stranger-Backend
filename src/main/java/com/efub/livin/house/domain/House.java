@@ -3,9 +3,10 @@ package com.efub.livin.house.domain;
 import com.efub.livin.house.dto.request.HouseCreateRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Getter
+@Getter @Setter
 @Table(name = "house")
 public class House {
 
@@ -17,8 +18,8 @@ public class House {
     private String address;
     private String image;
     private String phone; // 대표 번호
-    private float lat; // 위도
-    private float lon; // 경도
+    private String lat; // 위도
+    private String lon; // 경도
     private String place_url; // 상세 페이지 URL
     private String docId; // 지도 자체 장소 id
     private Integer floor;
@@ -41,8 +42,8 @@ public class House {
         house.buildingName = dto.getPlace_name();
         house.address = dto.getAddress_name();
         house.phone = dto.getPhone();
-        house.lat = Float.parseFloat(dto.getX());
-        house.lon = Float.parseFloat(dto.getY());
+        house.lon = dto.getX();
+        house.lat = dto.getY();
         house.docId = dto.getId();
         house.type = type;
         house.imageUrl = imageUrl;
