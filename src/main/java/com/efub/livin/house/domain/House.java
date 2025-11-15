@@ -21,20 +21,19 @@ public class House {
     private String lat; // 위도
     private String place_url; // 상세 페이지 URL
     private String docId; // 지도 자체 장소 id
-    @Column(name = "`floor`")
     private Integer floor;
     private Boolean parking;
-    @Column(name = "`options`")
     private String options;
+
+    @Column(columnDefinition = "TEXT")
     private String imageUrl;
+
     // 가격대
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "`type`")
     private HouseType type; // 자취방 PRIVATE, 하숙 BOARDING
 
     // 리뷰 관련
-    @Column(name = "`rate`")
     private float rate;
 
     // 리뷰 관계 코드

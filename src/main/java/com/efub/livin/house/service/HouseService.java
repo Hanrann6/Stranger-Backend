@@ -19,7 +19,6 @@ public class HouseService {
 
     private final HouseRepository houseRepository;
     private final KakaoApiClient kakaoApiClient;
-    private final ImageService imageService;
 
     // 새 자취/하숙 정보 등록
     @Transactional

@@ -33,7 +33,6 @@ public class HouseSaveService {
             List<Document> documents = response.getDocuments();
 
             if (documents == null || documents.isEmpty()) {
-                System.out.println(keyword + " 검색 결과 없음");
                 continue;
             }
 
@@ -43,7 +42,12 @@ public class HouseSaveService {
 
                 // 네이버 이미지 검색 호출
                 NaverImageResponseDto naverResponse = naverApiClient.searchImage(document.getPlace_name());
-
+                // Naver api 속도제한용 딜레이
+                try {
+                    Thread.sleep(100); // 0.1초 대기
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 // Naver 응답이 정상이면, thumbnail URL 추출
                 if (naverResponse != null && naverResponse.getItems() != null && !naverResponse.getItems().isEmpty()) {
                     imageUrl = naverResponse.getItems().get(0).getThumbnail();

@@ -31,7 +31,7 @@ public class KakaoApiClient {
         Integer radius = 1500; // 반경. 단위(m). 1.5km
 
         // 카카오 요청 url
-        String url = KEYWORD_API_URL + "?query={keyword}";
+        String url = KEYWORD_API_URL + "?query={keyword}&x={x}&y={y}&radius={radius}&sort=distance";
         Map<String, Object> params = new HashMap<>();
         params.put("keyword", keyword);
         params.put("x", x);
