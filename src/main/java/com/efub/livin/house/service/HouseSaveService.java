@@ -1,6 +1,7 @@
 package com.efub.livin.house.service;
 
 import com.efub.livin.house.domain.HouseType;
+import com.efub.livin.house.dto.response.NaverImageResponseDto;
 import lombok.RequiredArgsConstructor;
 import com.efub.livin.house.domain.Document;
 import com.efub.livin.house.domain.House;
@@ -17,6 +18,7 @@ import static com.efub.livin.house.domain.HouseType.PRIVATE;
 public class HouseSaveService {
 
     private final KakaoApiClient kakaoApiClient;
+    private final NaverApiClient naverApiClient;
     private final HouseSaveRepository houseSaveRepository;
 
     private static final List<String> KEYWORDS = List.of("자취", "고시원", "고시텔", "쉐어하우스", "하숙");
@@ -25,6 +27,8 @@ public class HouseSaveService {
 
         // 키워드별로 데이터 저장
         for(String keyword : KEYWORDS){
+
+            // 카카오 키워드별 검색 호출
             KakaoResponseDto response = kakaoApiClient.searchByKeyword(keyword);
             List<Document> documents = response.getDocuments();
 
@@ -35,6 +39,15 @@ public class HouseSaveService {
 
             for(Document document : documents){
                 HouseType type;
+                String imageUrl = null;
+
+                // 네이버 이미지 검색 호출
+                NaverImageResponseDto naverResponse = naverApiClient.searchImage(document.getPlace_name());
+
+                // Naver 응답이 정상이면, thumbnail URL 추출
+                if (naverResponse != null && naverResponse.getItems() != null && !naverResponse.getItems().isEmpty()) {
+                    imageUrl = naverResponse.getItems().get(0).getThumbnail();
+                }
 
                 if(keyword.equals("자취") || keyword.equals("고시원") || keyword.equals("고시텔")){
                     type = PRIVATE;
@@ -42,7 +55,7 @@ public class HouseSaveService {
                     type = BOARDING;
                 }
                 // House 엔티티로 변환
-                House house = House.from(document, type);
+                House house = House.from(document, type, imageUrl);
 
                 // DB에 저장
                 houseSaveRepository.save(house);
