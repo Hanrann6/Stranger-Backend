@@ -16,22 +16,25 @@ public class House {
 
     private String buildingName;
     private String address;
-    private String image;
     private String phone; // 대표 번호
-    private String lat; // 위도
     private String lon; // 경도
+    private String lat; // 위도
     private String place_url; // 상세 페이지 URL
     private String docId; // 지도 자체 장소 id
+    @Column(name = "`floor`")
     private Integer floor;
     private Boolean parking;
+    @Column(name = "`options`")
     private String options;
     private String imageUrl;
     // 가격대
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "`type`")
     private HouseType type; // 자취방 PRIVATE, 하숙 BOARDING
 
     // 리뷰 관련
+    @Column(name = "`rate`")
     private float rate;
 
     // 리뷰 관계 코드
@@ -51,14 +54,16 @@ public class House {
     }
 
     // 새 자취/하숙 데이터 저장용
-    public static House create(HouseCreateRequest request){
+    public static House create(HouseCreateRequest request, String lon, String lat){
         House house = new House();
         house.type = request.getType();
         house.buildingName = request.getBuildingName();
         house.address = request.getAddress();
         house.options = request.getOptions();
         house.parking = request.getParking();
-        // 위도, 경도 추가 로직
+        house.imageUrl = request.getImageUrl();
+        house.lon = lon;
+        house.lat = lat;
         return house;
     }
 

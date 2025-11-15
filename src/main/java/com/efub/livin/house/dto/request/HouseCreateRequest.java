@@ -19,5 +19,6 @@ public class HouseCreateRequest {
     private String address;
     private Boolean parking;
     private String options;
+    private String imageUrl;
 
 }

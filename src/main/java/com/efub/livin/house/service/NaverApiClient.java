@@ -17,10 +17,10 @@ public class NaverApiClient {
     private final RestTemplate restTemplate = new RestTemplate();
     private static final String NAVER_API_URL = "https://openapi.naver.com/v1/search/image";
 
-    @Value("${naver.search.NAVER_CLIENT_ID}")
+    @Value("${naver.search.naver-client-id}")
     private String naverClientId;
 
-    @Value("${naver.search.NAVER_CLIENT_SECRET}")
+    @Value("${naver.search.naver-client-secret}")
     private String naverClientSecret;
 
     public NaverImageResponseDto searchImage(String query) {

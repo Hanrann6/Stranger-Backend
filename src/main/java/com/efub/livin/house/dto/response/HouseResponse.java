@@ -19,6 +19,7 @@ public class HouseResponse {
     private String options;
     private String x; // 경도
     private String y; // 위도
+    private String imageUrl;
 
     public static HouseResponse from(House house){
         HouseResponse response = new HouseResponse();
@@ -30,7 +31,7 @@ public class HouseResponse {
         response.options = house.getOptions();
         response.x = house.getLon(); // 경도
         response.y = house.getLat(); // 위도
-
+        response.imageUrl = house.getImageUrl();
         return response;
     }
 }

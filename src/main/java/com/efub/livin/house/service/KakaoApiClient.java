@@ -17,7 +17,7 @@ public class KakaoApiClient {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @Value("${kakao.map.KAKAO_API_KEY}")
+    @Value("${kakao.map.kakao-api-key}")
     private String kakaoApiKey;
 
     private static final String KEYWORD_API_URL = "https://dapi.kakao.com/v2/local/search/keyword.json";
