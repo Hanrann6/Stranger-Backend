@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -65,6 +68,10 @@ public class DormReview extends BaseEntity {
     @Column(nullable = false)
     private Boolean anonym;
 
+    //리뷰 이미지 리스트
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewImage> images = new ArrayList<>();
+
     @Builder
     public DormReview(
             String buildName,
@@ -88,6 +95,12 @@ public class DormReview extends BaseEntity {
         this.finalRate = finalRate;
         this.review = review;
         this.anonym = anonym;
+    }
+
+    //이미지 추가하는 메서드
+    public void addImage(ReviewImage image) {
+        images.add(image);
+        image.setDormReview(this);
     }
 
 }
