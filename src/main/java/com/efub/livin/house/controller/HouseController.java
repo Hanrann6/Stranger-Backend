@@ -26,6 +26,13 @@ public class HouseController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    // 자취/하숙 상세 조회 컨트롤러
+    @GetMapping(value = "/{houseId}")
+    public ResponseEntity<HouseResponse> getOneHouse(@PathVariable Long houseId) {
+        HouseResponse response = houseService.getHouse(houseId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     // 자취/하숙 검색 및 필터링 컨트롤러
     // GET /house/search?keyword=신촌&sort=Popular&type=PRIVATE&address=서대문구&page=0
     @GetMapping(value = "/search")
