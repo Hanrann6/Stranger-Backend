@@ -1,12 +1,12 @@
 package com.efub.livin.review.repository;
 
-import com.efub.livin.review.domain.DormReview;
+import com.efub.livin.review.domain.HouseReview;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface HouseReviewRepository extends JpaRepository<DormReview, Long> {
+public interface HouseReviewRepository extends JpaRepository<HouseReview, Long> {
 
-    List<DormReview> findAllByOrderByCreatedAtDesc();
+    List<HouseReview> findByHouseIdOrderByCreatedAtDesc(Long houseId);
 
 }
