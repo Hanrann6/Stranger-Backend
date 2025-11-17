@@ -4,6 +4,7 @@ import com.efub.livin.house.dto.request.HouseCreateRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter @Setter
@@ -34,7 +35,12 @@ public class House {
     private HouseType type; // 자취방 PRIVATE, 하숙 BOARDING
 
     // 리뷰 관련
-    private float rate;
+    @ColumnDefault("0")
+    private float rate = 0;
+
+    // 북마크 개수
+    @ColumnDefault("0")
+    private int bookmarkCnt = 0;
 
     // 리뷰 관계 코드
 
