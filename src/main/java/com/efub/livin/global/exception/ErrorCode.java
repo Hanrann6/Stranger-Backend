@@ -10,7 +10,10 @@ public enum ErrorCode {
 
     // House 저장 관련
     KAKAO_API_ERROR(500, "카카오 API 연동 중 오류가 발생했습니다."),
-    KAKAO_API_EMPTY_RESPONSE(500, "카카오 API로부터 빈 응답을 받았습니다.");
+    KAKAO_API_EMPTY_RESPONSE(500, "카카오 API로부터 빈 응답을 받았습니다."),
+
+    //기숙사 리뷰 관련
+    DORM_REVIEW_NOT_FOUND(404, "해당 기숙사 리뷰를 찾을 수 없습니다.");
 
     private final int status;
     private final String message;

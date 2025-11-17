@@ -1,6 +1,7 @@
 package com.efub.livin.review.domain;
 
 import com.efub.livin.global.domain.BaseEntity;
+import com.efub.livin.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -32,9 +33,9 @@ public class DormReview extends BaseEntity {
     private String roomPeople;
 
     //FK : user_id
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", updatable = false, nullable = false)
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", updatable = false, nullable = false)
+    private User user;
 
     // 시설 평가
     @Enumerated(EnumType.STRING)
