@@ -2,9 +2,9 @@ package com.efub.livin.house.service;
 
 import com.efub.livin.house.domain.Document;
 import com.efub.livin.house.domain.House;
-import com.efub.livin.house.dto.response.HousePagingListResponse;
+import com.efub.livin.house.domain.HouseType;
+import com.efub.livin.house.dto.response.*;
 import com.efub.livin.house.dto.request.HouseCreateRequest;
-import com.efub.livin.house.dto.response.HouseResponse;
 import com.efub.livin.house.repository.HouseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,6 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +22,7 @@ public class HouseService {
 
     private final HouseRepository houseRepository;
     private final KakaoApiClient kakaoApiClient;
+    private final MapService mapService;
 
     private static final int house_list_size = 20;  // 임시로 20개 설정. 추후 프론트와 연동해보며 조절 예정
 
@@ -49,5 +53,49 @@ public class HouseService {
 
         Page<HouseResponse> dtoPage = searchHouses.map(HouseResponse::from);
         return new HousePagingListResponse(dtoPage);
+    }
+
+    // 자취/하숙 및 근처 편의시설 조회
+    @Transactional(readOnly = true)
+    public MapDataResponse getMapWithPoiData(
+            double minLat, double maxLat, double minLon, double maxLon,
+            double centerLat, double centerLon, double doubleRadius,
+            String type, boolean isShowCafe, boolean isShowStore, boolean isShowFood, boolean isShowTransport
+    ) {
+        // houseType 파싱
+        HouseType houseType = null; // ALL이면 null
+        if (type.equalsIgnoreCase("private")) houseType = HouseType.PRIVATE;
+        if (type.equalsIgnoreCase("boarding")) houseType = HouseType.BOARDING;
+
+        // 자취/하숙 조회
+        List<HouseMapResponse> houses = mapService.getHousesInBounds(minLat, maxLat, minLon, maxLon, houseType);
+
+        // 편의시설 조회 (토글에 따라 선택적으로)
+        List<PoiResponse> cafes = List.of();
+        List<PoiResponse> stores = List.of();
+        List<PoiResponse> restaurants = List.of();
+        List<PoiResponse> transports = List.of();
+
+        int radius = (int) Math.ceil(doubleRadius);
+        if (isShowCafe) {
+            cafes = mapService.getCafes(centerLat, centerLon, radius);
+        }
+        if (isShowStore) {
+            stores = mapService.getStores(centerLat, centerLon, radius);
+        }
+        if (isShowFood) {
+            stores = mapService.getFoods(centerLat, centerLon, radius);
+        }
+        if (isShowTransport) {
+            stores = mapService.getTransports(centerLat, centerLon, radius);
+        }
+
+        return MapDataResponse.builder()
+                .houses(houses)
+                .cafes(cafes)
+                .stores(stores)
+                .restaurants(restaurants)
+                .transports(transports)
+                .build();
     }
 }

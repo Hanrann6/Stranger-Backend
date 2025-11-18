@@ -70,6 +70,26 @@ public class CustomHouseRepositoryImpl implements CustomHouseRepository {
         return new PageImpl<>(content, pageable, totalCount);
     }
 
+    @Override
+    public List<House> findInBounds(double minLat, double maxLat, double minLon, double maxLon,
+                                    HouseType houseType) {
+        QHouse house = QHouse.house;
+
+        BooleanBuilder builder = new BooleanBuilder()
+                .and(house.lat.castToNum(Double.class).between(minLat, maxLat))
+                .and(house.lon.castToNum(Double.class).between(minLon, maxLon));
+
+        // 자취/하숙/전체
+        if(houseType != null){
+            builder.and(house.type.eq(houseType));
+        }
+
+        return queryFactory
+                .selectFrom(house)
+                .where(builder)
+                .fetch();
+    }
+
     private HouseType parseHouseType(String type) {
         if (type == null || type.equalsIgnoreCase("all")) {
             return null; // 전체 조회
