@@ -73,7 +73,7 @@ public class HouseService {
         // 편의시설 조회 (토글에 따라 선택적으로)
         List<PoiResponse> cafes = List.of();
         List<PoiResponse> stores = List.of();
-        List<PoiResponse> restaurants = List.of();
+        List<PoiResponse> foods = List.of();
         List<PoiResponse> transports = List.of();
 
         int radius = (int) Math.ceil(doubleRadius);
@@ -84,17 +84,17 @@ public class HouseService {
             stores = mapService.getStores(centerLat, centerLon, radius);
         }
         if (isShowFood) {
-            stores = mapService.getFoods(centerLat, centerLon, radius);
+            foods = mapService.getFoods(centerLat, centerLon, radius);
         }
         if (isShowTransport) {
-            stores = mapService.getTransports(centerLat, centerLon, radius);
+            transports = mapService.getTransports(centerLat, centerLon, radius);
         }
 
         return MapDataResponse.builder()
                 .houses(houses)
                 .cafes(cafes)
                 .stores(stores)
-                .restaurants(restaurants)
+                .restaurants(foods)
                 .transports(transports)
                 .build();
     }
