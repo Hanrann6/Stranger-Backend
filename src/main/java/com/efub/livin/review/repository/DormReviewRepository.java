@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface DormReviewRepository extends JpaRepository<DormReview, Long> {
 
-    List<DormReview> findAllByOrderByCreatedAtDesc();
-
     @Query("""
         SELECT d
         FROM DormReview d
