@@ -47,9 +47,11 @@ public class HouseService {
             String sort,    // review(default), bookmark
             String type,    // all(default), private, boarding
             String address, // all(default), 서대문구, 마포구, 종로구, 중구, 은평구, 용산구
-            int page) {
+            int page
+    ) {
         Pageable pageable = PageRequest.of(page, house_list_size);
-        Page<House> searchHouses = houseRepository.search(keyword, sort, type, address, pageable);
+        HouseType houseType = parseHouseType(type);
+        Page<House> searchHouses = houseRepository.search(keyword, sort, houseType, address, pageable);
 
         Page<HouseResponse> dtoPage = searchHouses.map(HouseResponse::from);
         return new HousePagingListResponse(dtoPage);
@@ -63,9 +65,7 @@ public class HouseService {
             String type, boolean isShowCafe, boolean isShowStore, boolean isShowFood, boolean isShowTransport
     ) {
         // houseType 파싱
-        HouseType houseType = null; // ALL이면 null
-        if (type.equalsIgnoreCase("private")) houseType = HouseType.PRIVATE;
-        if (type.equalsIgnoreCase("boarding")) houseType = HouseType.BOARDING;
+        HouseType houseType = parseHouseType(type);
 
         // 자취/하숙 조회
         List<HouseMapResponse> houses = mapService.getHousesInBounds(minLat, maxLat, minLon, maxLon, houseType);
@@ -97,5 +97,24 @@ public class HouseService {
                 .restaurants(foods)
                 .transports(transports)
                 .build();
+    }
+
+    /**
+     * HouseType String -> enum으로 파싱
+     * */
+    private HouseType parseHouseType(String type) {
+        if (type == null || type.equalsIgnoreCase("all")) {
+            return null; // 전체 조회
+        }
+
+        if (type.equalsIgnoreCase("private")) {
+            return HouseType.PRIVATE;
+        }
+
+        if (type.equalsIgnoreCase("boarding")) {
+            return HouseType.BOARDING;
+        }
+
+        return null;
     }
 }
