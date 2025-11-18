@@ -9,6 +9,7 @@ import com.efub.livin.house.repository.HouseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,12 +29,13 @@ public class MapService {
     public List<PoiResponse> getStores(double centerX, double centerY, int radius) {
         // 편의점
         KakaoResponseDto storeDto = kakaoApiClient.searchPoiByCategory("CS2", centerX, centerY, radius);
-        List<PoiResponse> store = toPoiResponses(storeDto, "store");
-
         // 대형마트
         KakaoResponseDto martDto = kakaoApiClient.searchPoiByCategory("MT1", centerX, centerY, radius);
-        //TODO: test로 category 우선 mart로 지정. 추후 store로 변경 필요
-        store.addAll(toPoiResponses(martDto, "mart"));
+
+        List<PoiResponse> store = new ArrayList<>();
+
+        store.addAll(toPoiResponses(storeDto, "store"));
+        store.addAll(toPoiResponses(martDto, "store"));
 
         return store;
     }
