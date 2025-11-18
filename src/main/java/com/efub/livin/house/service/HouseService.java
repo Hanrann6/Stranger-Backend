@@ -36,6 +36,12 @@ public class HouseService {
         return HouseResponse.from(savedHouse);
     }
 
+    // 자취/하숙 상세 정보 조회
+    @Transactional(readOnly = true)
+    public HouseResponse getHouse(Long id) {
+        return houseRepository.findById(id).map(HouseResponse::from).orElse(null);
+    }
+
     // 자취/하숙 검색 및 필터링
     @Transactional(readOnly = true)
     public HousePagingListResponse search(
