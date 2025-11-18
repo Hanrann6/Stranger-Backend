@@ -3,13 +3,13 @@ package com.efub.livin.user.domain;
 import com.efub.livin.global.domain.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
