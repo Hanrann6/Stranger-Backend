@@ -78,16 +78,16 @@ public class HouseService {
 
         int radius = (int) Math.ceil(doubleRadius);
         if (isShowCafe) {
-            cafes = mapService.getCafes(centerLat, centerLon, radius);
+            cafes = mapService.getCafes(centerLon, centerLat, radius);
         }
         if (isShowStore) {
-            stores = mapService.getStores(centerLat, centerLon, radius);
+            stores = mapService.getStores(centerLon, centerLat, radius);
         }
         if (isShowFood) {
-            foods = mapService.getFoods(centerLat, centerLon, radius);
+            foods = mapService.getFoods(centerLon, centerLat, radius);
         }
         if (isShowTransport) {
-            transports = mapService.getTransports(centerLat, centerLon, radius);
+            transports = mapService.getTransports(centerLon, centerLat, radius);
         }
 
         return MapDataResponse.builder()
