@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface HouseReviewRepository extends JpaRepository<HouseReview, Long> {
 
-    List<HouseReview> findByHouseIdOrderByCreatedAtDesc(Long houseId);
-
+    List<HouseReview> findByHouse_HouseIdOrderByCreatedAtDesc(Long houseId);
+    
 }

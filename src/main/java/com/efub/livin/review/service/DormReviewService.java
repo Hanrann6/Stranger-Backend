@@ -40,8 +40,10 @@ public class DormReviewService {
 
     // 리뷰 전체 목록 조회
     @Transactional(readOnly = true)
-    public List<DormReviewListResponseDto> getDormReviewList(){
-        List<DormReview> reviews = dormReviewRepository.findAllByOrderByCreatedAtDesc();
+    public List<DormReviewListResponseDto> getDormReviewList(String buildName,
+                                                             String buildNum,
+                                                             Integer minFinalRate){
+        List<DormReview> reviews = dormReviewRepository.searchDormReviews(buildName, buildNum, minFinalRate);
 
         return reviews.stream()
                 .map(DormReviewListResponseDto::from)

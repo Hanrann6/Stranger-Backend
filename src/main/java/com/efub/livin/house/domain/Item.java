@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true) // thumbnail 외 다른 필드 무시

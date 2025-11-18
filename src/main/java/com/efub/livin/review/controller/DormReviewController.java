@@ -28,8 +28,12 @@ public class DormReviewController {
 
     // 리뷰 전체 목록 조회
     @GetMapping
-    public ResponseEntity<List<DormReviewListResponseDto>> getDormReviewList(){
-        List<DormReviewListResponseDto> list = dormReviewService.getDormReviewList();
+    public ResponseEntity<List<DormReviewListResponseDto>> getDormReviewList(
+            @RequestParam(required = false) String buildName,
+            @RequestParam(required = false) String buildNum,
+            @RequestParam(required = false) Integer minFinalRate
+    ){
+        List<DormReviewListResponseDto> list = dormReviewService.getDormReviewList(buildName, buildNum, minFinalRate);
         return ResponseEntity.ok(list);
     }
 

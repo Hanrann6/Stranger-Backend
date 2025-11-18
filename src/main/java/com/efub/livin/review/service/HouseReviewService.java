@@ -43,7 +43,7 @@ public class HouseReviewService {
     //리뷰 전체 목록 조회
     @Transactional(readOnly = true)
     public List<HouseReviewListResponseDto> getHouseReviewList(Long houseId){
-        List<HouseReview> review = houseReviewRepository.findByHouseIdOrderByCreatedAtDesc(houseId);
+        List<HouseReview> review = houseReviewRepository.findByHouse_HouseIdOrderByCreatedAtDesc(houseId);
         return review.stream()
                 .map(HouseReviewListResponseDto::from)
                 .toList();

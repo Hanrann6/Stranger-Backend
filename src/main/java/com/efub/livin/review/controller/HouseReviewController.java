@@ -36,7 +36,7 @@ public class HouseReviewController {
     }
 
     //리뷰 상세 조회
-    @GetMapping("/{houseId]/reivew/{reviewId}")
+    @GetMapping("/{houseId}/reivew/{reviewId}")
     public ResponseEntity<HouseReviewDetailResponseDto> getHouseReviewDetail(@PathVariable Long houseId,
                                                                              @PathVariable Long reviewId){
         return ResponseEntity.ok(houseReviewService.getHouseReviewDetail(reviewId));

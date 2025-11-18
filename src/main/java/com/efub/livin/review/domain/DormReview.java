@@ -32,10 +32,10 @@ public class DormReview extends BaseEntity {
     @Column(nullable = false)
     private String roomPeople;
 
-    //FK : user_id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", updatable = false, nullable = false)
-    private User user;
+//    //FK : user_id
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", updatable = false, nullable = false)
+//    private User user;
 
     // 시설 평가
     @Enumerated(EnumType.STRING)
@@ -70,7 +70,7 @@ public class DormReview extends BaseEntity {
     private Boolean anonym;
 
     //리뷰 이미지 리스트
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dormReview", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewImage> images = new ArrayList<>();
 
     @Builder

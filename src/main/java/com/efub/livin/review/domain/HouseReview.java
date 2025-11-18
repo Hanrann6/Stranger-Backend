@@ -26,10 +26,10 @@ public class HouseReview extends BaseEntity {
     @JoinColumn(name = "house_id", updatable = false, nullable = false)
     private House house;
 
-    //FK : user_id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", updatable = false, nullable = false)
-    private User user;
+//    //FK : user_id
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", updatable = false, nullable = false)
+//    private User user;
 
     // 시설 평가
     @Enumerated(EnumType.STRING)
@@ -64,7 +64,7 @@ public class HouseReview extends BaseEntity {
     private Boolean anonym;
 
     //이미지 리스트
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "houseReview", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewImage> images = new ArrayList<>();
 
     @Builder
@@ -75,8 +75,7 @@ public class HouseReview extends BaseEntity {
                        BugRate bugRate,
                        Integer finalRate,
                        String review,
-                       Boolean anonym,
-                       User user) {
+                       Boolean anonym) {
         this.house = house;
         this.facilityRate = facilityRate;
         this.accessRate = accessRate;
@@ -85,7 +84,6 @@ public class HouseReview extends BaseEntity {
         this.finalRate = finalRate;
         this.review = review;
         this.anonym = anonym;
-        this.user = user;
     }
 
     //이미지 추가하는 메서드
