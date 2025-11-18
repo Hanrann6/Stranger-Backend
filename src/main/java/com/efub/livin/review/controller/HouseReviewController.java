@@ -5,7 +5,6 @@ import com.efub.livin.review.dto.response.HouseReviewDetailResponseDto;
 import com.efub.livin.review.dto.response.HouseReviewListResponseDto;
 import com.efub.livin.review.service.HouseReviewService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +35,7 @@ public class HouseReviewController {
     }
 
     //리뷰 상세 조회
-    @GetMapping("/{houseId}/reivew/{reviewId}")
+    @GetMapping("/{houseId}/review/{reviewId}")
     public ResponseEntity<HouseReviewDetailResponseDto> getHouseReviewDetail(@PathVariable Long houseId,
                                                                              @PathVariable Long reviewId){
         return ResponseEntity.ok(houseReviewService.getHouseReviewDetail(reviewId));

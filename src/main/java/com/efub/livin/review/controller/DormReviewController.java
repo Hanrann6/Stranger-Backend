@@ -52,5 +52,4 @@ public class DormReviewController {
         dormReviewService.deleteDormReview(id);
         return ResponseEntity.noContent().build();
     }
-
 }
