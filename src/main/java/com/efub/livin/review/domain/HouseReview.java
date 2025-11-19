@@ -2,6 +2,7 @@ package com.efub.livin.review.domain;
 
 import com.efub.livin.global.domain.BaseEntity;
 import com.efub.livin.house.domain.House;
+import com.efub.livin.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,7 +26,7 @@ public class HouseReview extends BaseEntity {
     @JoinColumn(name = "house_id", updatable = false, nullable = false)
     private House house;
 
-    //FK : user_id
+//    //FK : user_id
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id", updatable = false, nullable = false)
 //    private User user;
@@ -63,7 +64,7 @@ public class HouseReview extends BaseEntity {
     private Boolean anonym;
 
     //이미지 리스트
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "houseReview", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewImage> images = new ArrayList<>();
 
     @Builder

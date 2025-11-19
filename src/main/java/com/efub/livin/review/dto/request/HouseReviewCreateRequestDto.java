@@ -1,5 +1,6 @@
 package com.efub.livin.review.dto.request;
 
+import com.efub.livin.house.domain.House;
 import com.efub.livin.review.domain.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,28 +9,20 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class DormCreateRequestDto {
-    private String buildName;
-    private String buildNum;
-    private String roomPeople;
+public class HouseReviewCreateRequestDto {
 
     private FacilityRate facilityRate;
-    private AccessRate accessRate;
     private SoundRate soundRate;
+    private AccessRate accessRate;
     private BugRate bugRate;
-
     private Integer finalRate;
     private String review;
     private Boolean anonym;
-
-    // ★ 이미지 URL 여러 개 받기
     private List<String> imageUrls;
 
-    public DormReview toEntity(){
-        return DormReview.builder()
-            .buildName(buildName)
-                .buildNum(buildNum)
-                .roomPeople(roomPeople)
+    public HouseReview toEntitiy(House house){
+        return HouseReview.builder()
+                .house(house)
                 .facilityRate(facilityRate)
                 .accessRate(accessRate)
                 .soundRate(soundRate)
@@ -39,4 +32,5 @@ public class DormCreateRequestDto {
                 .anonym(anonym)
                 .build();
     }
+
 }

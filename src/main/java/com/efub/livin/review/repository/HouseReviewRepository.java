@@ -1,5 +1,12 @@
 package com.efub.livin.review.repository;
 
-public class HouseReviewRepository {
-    //리뷰 아이디로 리뷰를 찾아오는 메소드
+import com.efub.livin.review.domain.HouseReview;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface HouseReviewRepository extends JpaRepository<HouseReview, Long> {
+
+    List<HouseReview> findByHouse_HouseIdOrderByCreatedAtDesc(Long houseId);
+    
 }
