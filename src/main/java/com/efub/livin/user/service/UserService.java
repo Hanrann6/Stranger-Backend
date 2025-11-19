@@ -7,6 +7,7 @@ import com.efub.livin.user.dto.SignupData;
 import com.efub.livin.user.dto.request.EmailVerificationRequest;
 import com.efub.livin.user.dto.request.PasswordRequest;
 import com.efub.livin.user.dto.request.SignupRequest;
+import com.efub.livin.user.dto.response.UserInfoResponse;
 import com.efub.livin.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -86,6 +87,14 @@ public class UserService {
 
         // 임시 저장 사용자 정보 삭제
         tempSignupData.remove(email);
+    }
+
+    public UserInfoResponse updateInfo(User user, String nickname){
+        if (isNicknameExists(nickname)) {
+            throw new CustomException(ErrorCode.NICKNAME_DUPLICATED);  // 에러코드 별도 정의 필요
+        }
+        user.changeNickname(nickname);
+        return new UserInfoResponse(user.getNickname(), user.getEmail(), user.getSchool());
     }
 
     // 닉네임 중복 검사

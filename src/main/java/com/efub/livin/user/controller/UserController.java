@@ -1,17 +1,18 @@
 package com.efub.livin.user.controller;
 
+import com.efub.livin.auth.domain.CustomUserDetails;
 import com.efub.livin.user.dto.request.EmailVerificationRequest;
 import com.efub.livin.user.dto.request.PasswordRequest;
 import com.efub.livin.user.dto.request.SignupRequest;
+import com.efub.livin.user.dto.request.UpdateUserRequest;
+import com.efub.livin.user.dto.response.UserInfoResponse;
 import com.efub.livin.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,6 +50,14 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserInfoResponse> getInfo(@AuthenticationPrincipal CustomUserDetails userDetails){
         UserInfoResponse userInfoResponse = new UserInfoResponse(userDetails.getUsername(),userDetails.getUserEmail(),userDetails.getSchool());
+        return ResponseEntity.ok(userInfoResponse);
+    }
+
+    // 회원 정보 _ 닉네임 수정
+    @PatchMapping("/me")
+    public ResponseEntity<UserInfoResponse> updateInfo(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                       @RequestBody UpdateUserRequest request) {
+        UserInfoResponse userInfoResponse = userService.updateInfo(userDetails.getUser(), request.nickname());
         return ResponseEntity.ok(userInfoResponse);
     }
 }
