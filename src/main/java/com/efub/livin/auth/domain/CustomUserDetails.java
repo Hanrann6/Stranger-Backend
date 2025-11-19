@@ -26,6 +26,7 @@ public class CustomUserDetails implements UserDetails {
     public Long getUserId() {
         return user.getUserId();
     }
+    public String getSchool(){return user.getSchool();}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

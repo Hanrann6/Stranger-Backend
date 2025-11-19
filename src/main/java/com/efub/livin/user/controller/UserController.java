@@ -44,4 +44,11 @@ public class UserController {
         userService.setPassword(request);
         return ResponseEntity.ok("회원가입 완료");
     }
+
+    // 회원 정보 조회
+    @GetMapping("/me")
+    public ResponseEntity<UserInfoResponse> getInfo(@AuthenticationPrincipal CustomUserDetails userDetails){
+        UserInfoResponse userInfoResponse = new UserInfoResponse(userDetails.getUsername(),userDetails.getUserEmail(),userDetails.getSchool());
+        return ResponseEntity.ok(userInfoResponse);
+    }
 }
