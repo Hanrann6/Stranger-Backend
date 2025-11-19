@@ -7,12 +7,14 @@ import com.efub.livin.user.dto.SignupData;
 import com.efub.livin.user.dto.request.EmailVerificationRequest;
 import com.efub.livin.user.dto.request.PasswordRequest;
 import com.efub.livin.user.dto.request.SignupRequest;
+import com.efub.livin.user.dto.response.UserInfoResponse;
 import com.efub.livin.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,6 +33,7 @@ public class UserService {
     // 이메일 -> 회원가입 임시 정보 저장
     private final ConcurrentHashMap<String, SignupData> tempSignupData = new ConcurrentHashMap<>();
 
+    @Transactional
     public void signup(SignupRequest request){
         if (isNicknameExists(request.getNickname())) {
             throw new CustomException(ErrorCode.NICKNAME_DUPLICATED);  // 에러코드 별도 정의 필요
@@ -54,6 +57,7 @@ public class UserService {
         tempSignupData.put(request.getEmail(),new SignupData(request.getNickname(),request.getSchool()));
     }
 
+    @Transactional(readOnly = true)
     public boolean verifyEmail(EmailVerificationRequest request){
         String email = request.getEmail();
         String inputCode = request.getVerificationCode();
@@ -66,6 +70,7 @@ public class UserService {
         return false;
     }
 
+    @Transactional
     public void setPassword(PasswordRequest request){
         String email = request.getEmail();
 
@@ -86,6 +91,15 @@ public class UserService {
 
         // 임시 저장 사용자 정보 삭제
         tempSignupData.remove(email);
+    }
+
+    @Transactional
+    public UserInfoResponse updateInfo(User user, String nickname){
+        if (isNicknameExists(nickname)) {
+            throw new CustomException(ErrorCode.NICKNAME_DUPLICATED);  // 에러코드 별도 정의 필요
+        }
+        user.changeNickname(nickname);
+        return new UserInfoResponse(user.getNickname(), user.getEmail(), user.getSchool());
     }
 
     // 닉네임 중복 검사

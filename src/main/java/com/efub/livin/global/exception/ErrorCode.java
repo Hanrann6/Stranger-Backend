@@ -8,9 +8,10 @@ import lombok.Getter;
 public enum ErrorCode {
     UNAUTHORIZED_ACCESS(401, "인증되지 않은 사용자입니다."),
 
-    // 회원 가입 관련
+    // 유저 관련
     NICKNAME_DUPLICATED(409, "이미 존재하는 닉네임입니다."),
     EMAIL_NOT_VERIFIED(400, "해당 이메일로 요청한 사용자 정보가 없습니다."),
+    NICKNAME_BLANK(400, "닉네임은 비어 있을 수 없습니다."),
 
     // 인증 관련
     USER_NOT_FOUND(404, "존재하지 않는 사용자입니다."),
