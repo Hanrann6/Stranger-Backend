@@ -1,8 +1,6 @@
 package com.efub.livin.auth.jwt;
 
 import com.efub.livin.auth.domain.CustomUserDetails;
-import com.efub.livin.global.exception.CustomException;
-import com.efub.livin.global.exception.ErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -39,10 +37,14 @@ public class JwtUtil {
 
     public String generateAccessToken(Authentication authentication) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)  // ROLE_USER, ROLE_ADMIN 등 문자열만 추출
+                .collect(Collectors.joining(","));
         Date now = new Date();
         return Jwts.builder()
                 .setSubject(customUserDetails.getUserEmail())
                 .claim("userId", customUserDetails.getUserId())
+                .claim("authorities", authorities)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime()+ACC_EXP_MS))
                 .signWith(secretKey)
@@ -50,10 +52,14 @@ public class JwtUtil {
     }
     public String generateRefreshToken(Authentication authentication) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)  // ROLE_USER, ROLE_ADMIN 등 문자열만 추출
+                .collect(Collectors.joining(","));
         Date now = new Date();
         return Jwts.builder()
                 .setSubject(customUserDetails.getUserEmail())
                 .claim("userId", customUserDetails.getUserId())
+                .claim("authorities", authorities)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime()+REFRESH_EXP_MS))
                 .signWith(secretKey)
@@ -61,15 +67,17 @@ public class JwtUtil {
     }
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
+        Object authoritiesClaim = claims.get("authorities");
 
-        if(claims.get("auth")==null){
-            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        if (authoritiesClaim == null) {
+            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
 
         Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get("auth").toString().split(","))
+                Arrays.stream(authoritiesClaim.toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
+
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
         return new UsernamePasswordAuthenticationToken(userDetails, null, authorities);

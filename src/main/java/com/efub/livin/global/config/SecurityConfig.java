@@ -25,7 +25,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtUtil jwtUtil;
+    private final JwtFilter jwtFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -63,17 +63,16 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users/signup").permitAll()
                         .requestMatchers(
                                 "/users/signup",
                                 "/users/verify-email",
                                 "/users/signup/password",// 회원가입 허용
                                 "/auth/login",  // 로그인 허용
                                 "/auth/token"  // if. 토큰 재발급
-                        ).permitAll() // 위에 명시된 경로들은 인증 없이 접근 허용
-                        .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
+                        ).permitAll()
+                        .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
