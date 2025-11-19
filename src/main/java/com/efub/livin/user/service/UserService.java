@@ -89,6 +89,7 @@ public class UserService {
         tempSignupData.remove(email);
     }
 
+    @Transactional
     public UserInfoResponse updateInfo(User user, String nickname){
         if (isNicknameExists(nickname)) {
             throw new CustomException(ErrorCode.NICKNAME_DUPLICATED);  // 에러코드 별도 정의 필요
