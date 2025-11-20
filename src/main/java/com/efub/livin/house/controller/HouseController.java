@@ -1,6 +1,8 @@
 package com.efub.livin.house.controller;
 
+import com.efub.livin.auth.domain.CustomUserDetails;
 import com.efub.livin.house.dto.request.HouseCreateRequest;
+import com.efub.livin.house.dto.response.BookmarkResponse;
 import com.efub.livin.house.dto.response.HousePagingListResponse;
 import com.efub.livin.house.dto.response.HouseResponse;
 import com.efub.livin.house.dto.response.MapDataResponse;
@@ -9,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,6 +35,15 @@ public class HouseController {
     public ResponseEntity<HouseResponse> getOneHouse(@PathVariable Long houseId) {
         HouseResponse response = houseService.getHouse(houseId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // 북마크 토글 컨트롤러
+    // POST /house/bookmark
+    @PostMapping(value = "/bookmark/{houseId}")
+    public ResponseEntity<BookmarkResponse> toggleBookmark(@PathVariable Long houseId,
+                                                           @AuthenticationPrincipal CustomUserDetails userDetails){
+        BookmarkResponse response = houseService.toggleBookmark(houseId, userDetails.getUser());
+        return ResponseEntity.ok(response);
     }
 
     // 자취/하숙 검색 및 필터링 컨트롤러

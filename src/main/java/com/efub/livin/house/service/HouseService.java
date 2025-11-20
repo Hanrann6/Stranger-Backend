@@ -1,26 +1,32 @@
 package com.efub.livin.house.service;
 
+import com.efub.livin.global.exception.CustomException;
+import com.efub.livin.global.exception.ErrorCode;
+import com.efub.livin.house.domain.Bookmark;
 import com.efub.livin.house.domain.Document;
 import com.efub.livin.house.domain.House;
 import com.efub.livin.house.domain.HouseType;
 import com.efub.livin.house.dto.response.*;
 import com.efub.livin.house.dto.request.HouseCreateRequest;
+import com.efub.livin.house.repository.BookmarkRepository;
 import com.efub.livin.house.repository.HouseRepository;
+import com.efub.livin.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class HouseService {
 
     private final HouseRepository houseRepository;
+    private final BookmarkRepository bookmarkRepository;
     private final KakaoApiClient kakaoApiClient;
     private final MapService mapService;
 
@@ -44,6 +50,26 @@ public class HouseService {
     @Transactional(readOnly = true)
     public HouseResponse getHouse(Long id) {
         return houseRepository.findById(id).map(HouseResponse::from).orElse(null);
+    }
+
+    // 자취/하숙 북마크
+    @Transactional
+    public BookmarkResponse toggleBookmark(Long houseId, User user) {
+        House house = houseRepository.findById(houseId)
+                .orElseThrow(() -> new CustomException(ErrorCode.HOUSE_NOT_FOUND));
+
+        Bookmark bookmark = bookmarkRepository.findByUserAndHouse(user, house)
+                .orElse(null);
+        if(bookmark == null){
+            Bookmark saved = bookmarkRepository.save(Bookmark.builder()
+                    .user(user)
+                    .house(house)
+                    .build());
+            return new BookmarkResponse(true, saved.getId());
+        } else {
+            bookmarkRepository.delete(bookmark);
+            return new BookmarkResponse(false, null);
+        }
     }
 
     // 자취/하숙 검색 및 필터링
@@ -105,9 +131,7 @@ public class HouseService {
                 .build();
     }
 
-    /**
-     * HouseType String -> enum으로 파싱
-     * */
+    // HouseType String -> enum으로 파싱
     private HouseType parseHouseType(String type) {
         if (type == null || type.equalsIgnoreCase("all")) {
             return null; // 전체 조회
@@ -122,5 +146,10 @@ public class HouseService {
         }
 
         return null;
+    }
+
+    // 북마크 되어있는지 확인
+    private boolean isBookmarked(House house, User user) {
+        return bookmarkRepository.existsByUserAndHouse(user, house);
     }
 }
