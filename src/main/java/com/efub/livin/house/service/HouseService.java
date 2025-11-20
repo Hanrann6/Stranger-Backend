@@ -1,5 +1,6 @@
 package com.efub.livin.house.service;
 
+import com.efub.livin.auth.domain.CustomUserDetails;
 import com.efub.livin.global.exception.CustomException;
 import com.efub.livin.global.exception.ErrorCode;
 import com.efub.livin.house.domain.Bookmark;
@@ -34,6 +35,7 @@ public class HouseService {
     private final MapService mapService;
 
     private static final int house_list_size = 20;  // 임시로 20개 설정. 추후 프론트와 연동해보며 조절 예정
+    private static final int bookmark_list_size = 10;
 
     // 새 자취/하숙 정보 등록
     @Transactional
@@ -76,6 +78,15 @@ public class HouseService {
             bookmarkRepository.delete(bookmark);
             return new BookmarkResponse(false, null);
         }
+    }
+
+    // 본인이 한 북마크 리스트 조회
+    @Transactional(readOnly = true)
+    public List<HouseResponse> getMyBookmark(User user) {
+        List<House> houseList = houseRepository.findByMyBookmark(user);
+        return houseList.stream()
+                .map(house -> HouseResponse.from(house, true))
+                .collect(Collectors.toList());
     }
 
     // 자취/하숙 검색 및 필터링

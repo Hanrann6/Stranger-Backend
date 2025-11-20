@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/house")
@@ -67,7 +69,7 @@ public class HouseController {
      * &centerLat=1127693.125&centerLon=487873.75&radius=538.697
      * &showCafe=true&showFood=true
      */
-    @GetMapping("/map")
+    @GetMapping(value = "/map")
     public MapDataResponse getMap(
             @RequestParam(value = "minLat") double minLat,
             @RequestParam(value = "maxLat") double maxLat,
@@ -87,5 +89,13 @@ public class HouseController {
                 centerLat, centerLon, radius,
                 houseType, showCafe, showStore, showFood, showTransport
         );
+    }
+
+    // 내 북마크 리스트 조회 컨트롤러
+    // GET /house/bookmark/my
+    @GetMapping(value = "/bookmark/my")
+    public ResponseEntity<List<HouseResponse>> getMyBookmark(@AuthenticationPrincipal CustomUserDetails userDetails){
+        List<HouseResponse> response = houseService.getMyBookmark(userDetails.getUser());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
