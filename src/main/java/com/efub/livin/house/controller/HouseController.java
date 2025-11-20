@@ -32,13 +32,14 @@ public class HouseController {
 
     // 자취/하숙 상세 조회 컨트롤러
     @GetMapping(value = "/{houseId}")
-    public ResponseEntity<HouseResponse> getOneHouse(@PathVariable Long houseId) {
-        HouseResponse response = houseService.getHouse(houseId);
+    public ResponseEntity<HouseResponse> getOneHouse(@PathVariable Long houseId,
+                                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
+        HouseResponse response = houseService.getHouse(houseId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 북마크 토글 컨트롤러
-    // POST /house/bookmark
+    // POST /house/bookmark/2
     @PostMapping(value = "/bookmark/{houseId}")
     public ResponseEntity<BookmarkResponse> toggleBookmark(@PathVariable Long houseId,
                                                            @AuthenticationPrincipal CustomUserDetails userDetails){
@@ -54,9 +55,10 @@ public class HouseController {
             @RequestParam(value = "sort") String sort,
             @RequestParam(value = "type") String type,
             @RequestParam(value = "address") String address,
-            @RequestParam(value = "page") int page
+            @RequestParam(value = "page") int page,
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        HousePagingListResponse response = houseService.search(keyword, sort, type, address, page);
+        HousePagingListResponse response = houseService.search(keyword, sort, type, address, page, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

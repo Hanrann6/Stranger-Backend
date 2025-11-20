@@ -13,13 +13,16 @@ import com.efub.livin.house.repository.HouseRepository;
 import com.efub.livin.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,8 +51,11 @@ public class HouseService {
 
     // 자취/하숙 상세 정보 조회
     @Transactional(readOnly = true)
-    public HouseResponse getHouse(Long id) {
-        return houseRepository.findById(id).map(HouseResponse::from).orElse(null);
+    public HouseResponse getHouse(Long id, User user) {
+        House house = houseRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.HOUSE_NOT_FOUND));
+        boolean bookmarked = isBookmarked(house, user);
+        return HouseResponse.from(house, bookmarked);
     }
 
     // 자취/하숙 북마크
@@ -79,14 +85,33 @@ public class HouseService {
             String sort,    // review(default), bookmark
             String type,    // all(default), private, boarding
             String address, // all(default), 서대문구, 마포구, 종로구, 중구, 은평구, 용산구
-            int page
+            int page,
+            User user
     ) {
+        // 페이징을 반영한 검색
         Pageable pageable = PageRequest.of(page, house_list_size);
         HouseType houseType = parseHouseType(type);
         Page<House> searchHouses = houseRepository.search(keyword, sort, houseType, address, pageable);
 
-        Page<HouseResponse> dtoPage = searchHouses.map(HouseResponse::from);
-        return new HousePagingListResponse(dtoPage);
+        // houseId 리스트만 뽑기
+        List<Long> houseIds = searchHouses.getContent().stream()
+                .map(House::getHouseId)
+                .collect(Collectors.toList());
+
+        // 유저가 북마크한 리스트 id 조회
+        Set<Long> bookmarkedSet = new HashSet<>(
+                bookmarkRepository.findBookmarkedIdsIn(user.getUserId(), houseIds)
+        );
+
+        // 북마크 정보 반영한 dto list 생성
+        List<HouseResponse> content = searchHouses.getContent().stream()
+                .map(house -> HouseResponse.from(
+                        house,
+                        bookmarkedSet.contains(house.getHouseId())
+                ))
+                .toList();
+
+        return new HousePagingListResponse(searchHouses, content);
     }
 
     // 자취/하숙 및 근처 편의시설 조회
