@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/kakao")
-public class HouseSaveController {
+public class HouseSyncController {
 
     private final HouseSyncService houseSaveService;
 

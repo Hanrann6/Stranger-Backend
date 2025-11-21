@@ -1,9 +1,12 @@
 package com.efub.livin.house.domain;
 
+import com.efub.livin.global.domain.BaseEntity;
 import com.efub.livin.house.dto.request.HouseCreateRequest;
 import com.efub.livin.review.domain.HouseReview;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -13,7 +16,8 @@ import java.util.List;
 @Entity
 @Getter @Setter
 @Table(name = "house")
-public class House {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class House extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
