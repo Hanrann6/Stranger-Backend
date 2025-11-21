@@ -13,23 +13,30 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/review")
 public class CommentController {
 
     private final CommentService commentService;
 
     // 댓글 생성
-    @PostMapping(value = "/{reviewId}/comment")
+    @PostMapping(value = "/review/{reviewId}/comment")
     public ResponseEntity<CommentResponse> createComment(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long reviewId,
-            @RequestBody CommentCreateRequest request){
+            @RequestBody CommentCreateRequest request) {
+
         CommentResponse response = commentService.registerComment(userDetails.getUser(), reviewId, request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-//    // 댓글 삭제
-//    @DeleteMapping(value = "/{reviewId}/comment/{commentId}")
-//    public ResponseEntity<>
+    // 댓글 삭제
+    @DeleteMapping(value = "/comment/{commentId}")
+    public ResponseEntity<Void> deleteComment (
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long commentId) {
+
+        commentService.deleteComment(userDetails.getUser(), commentId);
+
+        return ResponseEntity.noContent().build();
+    }
 }

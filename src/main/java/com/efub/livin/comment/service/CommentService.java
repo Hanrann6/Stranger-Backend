@@ -32,7 +32,7 @@ public class CommentService {
     @Transactional
     public CommentResponse registerComment(User user, Long reviewId, CommentCreateRequest request){
 
-        // 유저 검사
+        // 유저 유효 검사
         Long userId = user.getUserId();
         if (!userRepository.existsById(user.getUserId())) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
@@ -46,7 +46,8 @@ public class CommentService {
                     .orElseThrow(() -> new CustomException(ErrorCode.DORM_REVIEW_NOT_FOUND));
 
             comment = request.toEntity(user, dormReview);
-        } else { // 자취/하숙 리뷰의 댓글
+        } else {
+            // 자취/하숙 리뷰의 댓글
             HouseReview houseReview = houseReviewRepository.findById(reviewId)
                     .orElseThrow(() -> new CustomException(ErrorCode.HOUSE_NOT_FOUND));
 
@@ -56,5 +57,27 @@ public class CommentService {
         Comment savedComment = commentRepository.save(comment);
 
         return CommentResponse.from(savedComment);
+    }
+
+    // 댓글 삭제
+    public void deleteComment(User user, Long commentId) {
+
+        // 유저 유효 검사
+        Long userId = user.getUserId();
+        if (!userRepository.existsById(user.getUserId())) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        // 댓글 유효 검사
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
+
+        // 사용자가 작성한 댓글이 맞는지 검사
+        if (!userId.equals(comment.getUser().getUserId())) {
+            throw new CustomException(ErrorCode.INVALID_PERMISSION);
+        }
+
+        commentRepository.delete(comment);
+
     }
 }
