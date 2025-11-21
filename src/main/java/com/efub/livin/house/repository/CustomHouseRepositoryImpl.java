@@ -1,8 +1,8 @@
 package com.efub.livin.house.repository;
 
+import com.efub.livin.bookmark.domain.QBookmark;
 import com.efub.livin.house.domain.House;
 import com.efub.livin.house.domain.HouseType;
-import com.efub.livin.house.domain.QBookmark;
 import com.efub.livin.house.domain.QHouse;
 import com.efub.livin.user.domain.User;
 import com.querydsl.core.BooleanBuilder;

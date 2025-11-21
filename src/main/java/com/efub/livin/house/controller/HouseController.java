@@ -2,7 +2,7 @@ package com.efub.livin.house.controller;
 
 import com.efub.livin.auth.domain.CustomUserDetails;
 import com.efub.livin.house.dto.request.HouseCreateRequest;
-import com.efub.livin.house.dto.response.BookmarkResponse;
+import com.efub.livin.bookmark.dto.response.BookmarkResponse;
 import com.efub.livin.house.dto.response.HousePagingListResponse;
 import com.efub.livin.house.dto.response.HouseResponse;
 import com.efub.livin.house.dto.response.MapDataResponse;
@@ -38,15 +38,6 @@ public class HouseController {
                                                      @AuthenticationPrincipal CustomUserDetails userDetails) {
         HouseResponse response = houseService.getHouse(houseId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    // 북마크 토글 컨트롤러
-    // POST /house/bookmark/2
-    @PostMapping(value = "/bookmark/{houseId}")
-    public ResponseEntity<BookmarkResponse> toggleBookmark(@PathVariable Long houseId,
-                                                           @AuthenticationPrincipal CustomUserDetails userDetails){
-        BookmarkResponse response = houseService.toggleBookmark(houseId, userDetails.getUser());
-        return ResponseEntity.ok(response);
     }
 
     // 자취/하숙 검색 및 필터링 컨트롤러
@@ -89,13 +80,5 @@ public class HouseController {
                 centerLat, centerLon, radius,
                 houseType, showCafe, showStore, showFood, showTransport
         );
-    }
-
-    // 내 북마크 리스트 조회 컨트롤러
-    // GET /house/bookmark/my
-    @GetMapping(value = "/bookmark/my")
-    public ResponseEntity<List<HouseResponse>> getMyBookmark(@AuthenticationPrincipal CustomUserDetails userDetails){
-        List<HouseResponse> response = houseService.getMyBookmark(userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

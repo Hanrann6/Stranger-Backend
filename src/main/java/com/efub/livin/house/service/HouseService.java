@@ -1,20 +1,17 @@
 package com.efub.livin.house.service;
 
-import com.efub.livin.auth.domain.CustomUserDetails;
 import com.efub.livin.global.exception.CustomException;
 import com.efub.livin.global.exception.ErrorCode;
-import com.efub.livin.house.domain.Bookmark;
 import com.efub.livin.house.domain.Document;
 import com.efub.livin.house.domain.House;
 import com.efub.livin.house.domain.HouseType;
 import com.efub.livin.house.dto.response.*;
 import com.efub.livin.house.dto.request.HouseCreateRequest;
-import com.efub.livin.house.repository.BookmarkRepository;
+import com.efub.livin.bookmark.repository.BookmarkRepository;
 import com.efub.livin.house.repository.HouseRepository;
 import com.efub.livin.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -58,35 +55,6 @@ public class HouseService {
                 .orElseThrow(() -> new CustomException(ErrorCode.HOUSE_NOT_FOUND));
         boolean bookmarked = isBookmarked(house, user);
         return HouseResponse.from(house, bookmarked);
-    }
-
-    // 자취/하숙 북마크
-    @Transactional
-    public BookmarkResponse toggleBookmark(Long houseId, User user) {
-        House house = houseRepository.findById(houseId)
-                .orElseThrow(() -> new CustomException(ErrorCode.HOUSE_NOT_FOUND));
-
-        Bookmark bookmark = bookmarkRepository.findByUserAndHouse(user, house)
-                .orElse(null);
-        if(bookmark == null){
-            Bookmark saved = bookmarkRepository.save(Bookmark.builder()
-                    .user(user)
-                    .house(house)
-                    .build());
-            return new BookmarkResponse(true, saved.getId());
-        } else {
-            bookmarkRepository.delete(bookmark);
-            return new BookmarkResponse(false, null);
-        }
-    }
-
-    // 본인이 한 북마크 리스트 조회
-    @Transactional(readOnly = true)
-    public List<HouseResponse> getMyBookmark(User user) {
-        List<House> houseList = houseRepository.findByMyBookmark(user);
-        return houseList.stream()
-                .map(house -> HouseResponse.from(house, true))
-                .collect(Collectors.toList());
     }
 
     // 자취/하숙 검색 및 필터링

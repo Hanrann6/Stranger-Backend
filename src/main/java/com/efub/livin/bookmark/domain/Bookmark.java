@@ -1,5 +1,6 @@
-package com.efub.livin.house.domain;
+package com.efub.livin.bookmark.domain;
 
+import com.efub.livin.house.domain.House;
 import com.efub.livin.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;

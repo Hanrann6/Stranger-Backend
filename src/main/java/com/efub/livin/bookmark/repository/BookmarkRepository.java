@@ -1,6 +1,6 @@
-package com.efub.livin.house.repository;
+package com.efub.livin.bookmark.repository;
 
-import com.efub.livin.house.domain.Bookmark;
+import com.efub.livin.bookmark.domain.Bookmark;
 import com.efub.livin.house.domain.House;
 import com.efub.livin.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
