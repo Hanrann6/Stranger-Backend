@@ -4,10 +4,7 @@ import com.efub.livin.global.domain.BaseEntity;
 import com.efub.livin.house.dto.request.HouseCreateRequest;
 import com.efub.livin.review.domain.HouseReview;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
@@ -15,6 +12,8 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@Builder
+@AllArgsConstructor
 @Table(name = "house")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class House extends BaseEntity {
@@ -63,34 +62,6 @@ public class House extends BaseEntity {
         this.floor = floor;
         this.elevator = elevator;
         this.parking = parking;
-    }
-
-    // Document dto -> House 엔티티로 변환
-    public static House from(Document dto, HouseType type, String imageUrl){
-        House house = new House();
-        house.buildingName = dto.getPlace_name();
-        house.address = dto.getAddress_name();
-        house.phone = dto.getPhone();
-        house.lon = dto.getX();
-        house.lat = dto.getY();
-        house.docId = dto.getId();
-        house.type = type;
-        house.imageUrl = imageUrl;
-        return house;
-    }
-
-    // 새 자취/하숙 데이터 저장용
-    public static House create(HouseCreateRequest request, String lon, String lat){
-        House house = new House();
-        house.type = request.getType();
-        house.buildingName = request.getBuildingName();
-        house.address = request.getAddress();
-        house.options = request.getOptions();
-        house.parking = request.getParking();
-        house.imageUrl = request.getImageUrl();
-        house.lon = lon;
-        house.lat = lat;
-        return house;
     }
 
 }
