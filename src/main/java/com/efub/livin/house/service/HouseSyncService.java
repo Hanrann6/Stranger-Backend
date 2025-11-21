@@ -37,6 +37,11 @@ public class HouseSyncService {
             }
 
             for(Document document : documents){
+
+                // 이미 존재하는 집이면 넘김
+                if (houseSaveRepository.existsByAddress(document.getAddress_name())){
+                    continue;
+                }
                 HouseType type;
                 String imageUrl = null;
 

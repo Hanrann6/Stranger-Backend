@@ -24,13 +24,17 @@ public class House extends BaseEntity {
     private Long houseId;
 
     private String buildingName;
-    private String address;
+
+    @Column(unique = true)
+    private String address; // 중복된 건물이 없도록
+
     private String phone; // 대표 번호
     private String lon; // 경도
     private String lat; // 위도
     private String place_url; // 상세 페이지 URL
     private String docId; // 지도 자체 장소 id
     private Integer floor;
+    private Boolean elevator; // 엘베
     private Boolean parking;
     private String options;
 
@@ -53,6 +57,13 @@ public class House extends BaseEntity {
     // 리뷰 관계 코드
     @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HouseReview> reviews = new ArrayList<>();
+
+    // csv 데이터로 필드 업데이트
+    public void updateSystemInfo(int floor, boolean elevator, boolean parking) {
+        this.floor = floor;
+        this.elevator = elevator;
+        this.parking = parking;
+    }
 
     // Document dto -> House 엔티티로 변환
     public static House from(Document dto, HouseType type, String imageUrl){
